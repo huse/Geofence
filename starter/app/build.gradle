@@ -10,8 +10,8 @@ android {
     buildToolsVersion "29.0.2"
 
     defaultConfig {
-        applicationId "com.udacity.project4"
-        minSdkVersion rootProject.minSdkVersion
+        applicationId "com.hus.geofence"
+        minSdkVersion 26
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -52,12 +52,12 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintVersion"
 
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     // Architecture Components
     //Navigation dependencies
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0-beta01'
     kapt "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
@@ -121,6 +121,9 @@ dependencies {
     //Maps & Geofencing
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+
+    implementation platform('com.google.firebase:firebase-bom:26.7.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
 
 }

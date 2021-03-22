@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel" />
+            type="com.hus.geofence.locationreminders.savereminder.SaveReminderViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
