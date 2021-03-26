@@ -10,8 +10,7 @@ import com.hus.geofence.locationreminders.data.dto.Result
 import kotlinx.coroutines.launch
 
 class RemindersListViewModel(
-    app: Application,
-    private val dataSource: ReminderDataSource
+    private val dataSource: ReminderDataSource, override val app: Application
 ) : BaseViewModel(app) {
     // list that holds the reminder data to be displayed on the UI
     val remindersList = MutableLiveData<List<ReminderDataItem>>()

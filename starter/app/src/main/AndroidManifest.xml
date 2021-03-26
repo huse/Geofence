@@ -33,11 +33,11 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyDFWraTR7_Zopb02Ex6A4LRkMpMRUbuLlw" />
 
-        <activity android:name="com.hus.geofence.authentication.AuthenticationActivity">
+        <activity android:name="com.hus.geofence.locationreminders.RemindersActivity">
         </activity>
-        <activity android:name="com.hus.geofence.locationreminders.RemindersActivity" >
+        <activity android:name="com.hus.geofence.authentication.AuthenticationActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

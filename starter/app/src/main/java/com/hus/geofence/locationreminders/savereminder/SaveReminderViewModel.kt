@@ -1,8 +1,10 @@
 package com.hus.geofence.locationreminders.savereminder
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PointOfInterest
 import com.hus.geofence.R
 import com.hus.geofence.base.BaseViewModel
@@ -12,7 +14,7 @@ import com.hus.geofence.locationreminders.data.dto.ReminderDTO
 import com.hus.geofence.locationreminders.reminderslist.ReminderDataItem
 import kotlinx.coroutines.launch
 
-class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
+class SaveReminderViewModel(override val app: Application, private val reminderDataSource: ReminderDataSource) :
     BaseViewModel(app) {
     val reminderTitle = MutableLiveData<String>()
     val reminderDescription = MutableLiveData<String>()
@@ -20,6 +22,8 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     val selectedPOI = MutableLiveData<PointOfInterest>()
     val latitude = MutableLiveData<Double>()
     val longitude = MutableLiveData<Double>()
+    val idForreminder = MutableLiveData<String>()
+    val TAG = "SaveReminderViewModel"
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called
@@ -36,10 +40,12 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     /**
      * Validate the entered data then saves the reminder data to the DataSource
      */
-    fun validateAndSaveReminder(reminderData: ReminderDataItem) {
-        if (validateEnteredData(reminderData)) {
-            saveReminder(reminderData)
+    fun validateAndSaveReminder(reminderDataItem: ReminderDataItem) : Boolean {
+        if (validateEnteredData(reminderDataItem)) {
+            saveReminder(reminderDataItem)
+            return true
         }
+        return false
     }
 
     /**
@@ -48,7 +54,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     fun saveReminder(reminderData: ReminderDataItem) {
         showLoading.value = true
         viewModelScope.launch {
-            dataSource.saveReminder(
+            reminderDataSource.saveReminder(
                 ReminderDTO(
                     reminderData.title,
                     reminderData.description,
@@ -78,5 +84,29 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
             return false
         }
         return true
+    }
+
+    fun settingValuesToReminder(data: ReminderDataItem) {
+        reminderTitle.value = data.title
+        reminderDescription.value = data.description
+        reminderSelectedLocationStr.value = data.location
+        latitude.value = data.latitude
+        longitude.value = data.longitude
+        idForreminder.value = data.id
+    }
+    fun deletingData() {
+        showLoading.value = false
+    }
+
+    fun positionUpdate(
+        latLng: LatLng,
+        snippet: String,
+        pointOfInterest: PointOfInterest? = null
+    ) {
+        Log.d(TAG, "updating latLng and snipped:" +snippet)
+        selectedPOI.postValue(pointOfInterest)
+        latitude.postValue(latLng.latitude)
+        longitude.postValue(latLng.longitude)
+        reminderSelectedLocationStr.postValue(snippet)
     }
 }

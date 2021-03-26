@@ -1,5 +1,6 @@
 package com.hus.geofence.base
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -13,9 +14,6 @@ abstract class BaseRecyclerViewAdapter<T>(private val callback: ((item: T) -> Un
 
     private var _items: MutableList<T> = mutableListOf()
 
-    /**
-     * Returns the _items data
-     */
     private val items: List<T>?
         get() = this._items
 
@@ -36,6 +34,9 @@ abstract class BaseRecyclerViewAdapter<T>(private val callback: ((item: T) -> Un
         val item = getItem(position)
         holder.bind(item)
         holder.itemView.setOnClickListener {
+
+            Log.d("BaseRecyclerViewAdapter", "hhhh onBindViewHolder ITEM  clicked.  "  + item )
+
             callback?.invoke(item)
         }
     }

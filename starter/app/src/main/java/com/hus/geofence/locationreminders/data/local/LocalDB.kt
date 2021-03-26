@@ -19,4 +19,11 @@ object LocalDB {
         ).build().reminderDao()
     }
 
+    fun deleteTables(context: Context) {
+        Room.databaseBuilder(
+            context.applicationContext,
+            RemindersDatabase::class.java, "locationReminders.db"
+        ).build().clearAllTables()
+    }
+
 }

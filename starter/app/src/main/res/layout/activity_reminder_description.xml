@@ -29,5 +29,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <Button
+            android:id="@+id/going_back_to_reminder_list_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/padding_large"
+            android:background="@color/colorPrimary"
+            android:text="Going back to reminder list"/>
+
     </LinearLayout>
 </layout>

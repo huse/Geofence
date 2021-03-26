@@ -7,8 +7,9 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion "29.0.2"
-
+    buildToolsVersion "29.0.3"
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
     defaultConfig {
         applicationId "com.hus.geofence"
         minSdkVersion 26
@@ -18,9 +19,13 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
-        buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"" + "AIzaSyDBFYI6iWLetucKpWrutmyWdX0QKCzBOMw" + "\""
+        buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"" + "AIzaSyDFWraTR7_Zopb02Ex6A4LRkMpMRUbuLlw" + "\""
+
     }
     buildTypes {
+        debug {
+            resValue("string", "google_maps_key", localProperties['apiKey'])
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -38,6 +43,26 @@ android {
     //    enabled = true
     //    enabledForTests = true
     //}
+/*    sourceSets {
+        getByName("main").java.srcDirs("build/generated/source/navigation-args")
+    }*/
+/*
+    testOptions.unitTests {
+        includeAndroidResources = true
+        returnDefaultValues = true
+    }
+
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+
+        test {
+            java.srcDir sharedTestDir
+        }
+
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+    }*/
     buildFeatures {
         dataBinding true
     }
@@ -61,6 +86,7 @@ dependencies {
     //Navigation dependencies
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0-beta01'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     kapt "androidx.lifecycle:lifecycle-compiler:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$archLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$archLifecycleVersion"
@@ -122,11 +148,13 @@ dependencies {
 
 
     //Maps & Geofencing
-    implementation "com.google.android.gms:play-services-location:$playServicesVersion"
-    implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+    implementation "com.google.android.gms:play-services-location:18.0.0"
+    implementation "com.google.android.gms:play-services-maps:17.0.0"
 
     implementation platform('com.google.firebase:firebase-bom:26.7.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.firebaseui:firebase-ui-auth:6.2.1'
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha05"
 
 
 }

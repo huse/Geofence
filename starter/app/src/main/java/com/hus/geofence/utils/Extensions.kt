@@ -2,7 +2,10 @@ package com.hus.geofence.utils
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.app.Activity
+import android.content.Context
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,7 +49,13 @@ fun View.fadeIn() {
         }
     })
 }
-
+fun Fragment.hideKeyboard() {
+    view?.let { activity?.hideKeyboard(it) }
+}
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}
 //animate changing the view visibility
 fun View.fadeOut() {
     this.animate().alpha(0f).setListener(object : AnimatorListenerAdapter() {
@@ -55,4 +64,9 @@ fun View.fadeOut() {
             this@fadeOut.visibility = View.GONE
         }
     })
+
+}
+object GeoFenceConstant {
+    const val GEO_FENCE_EVENT = "ACTION_GEOFENCE_EVENT"
+    const val GEO_FENCE_RADIUS = 100f
 }

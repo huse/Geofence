@@ -3,7 +3,10 @@ package com.hus.geofence.locationreminders
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import com.hus.geofence.R
 import kotlinx.android.synthetic.main.activity_reminders.*
 
@@ -11,6 +14,8 @@ import kotlinx.android.synthetic.main.activity_reminders.*
  * The RemindersActivity that holds the reminders fragments
  */
 class RemindersActivity : AppCompatActivity() {
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

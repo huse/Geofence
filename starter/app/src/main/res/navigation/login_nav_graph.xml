@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_nav_graph"
+    app:startDestination="@id/loginFragment">
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.hus.geofence.authentication.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_remindersActivity"
+            app:destination="@id/remindersActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/remindersActivity"
+        android:name="com.hus.geofence.locationreminders.RemindersActivity"
+        android:label="activity_reminders"
+        tools:layout="@layout/activity_reminders" />
+
+    <activity
+        android:id="@+id/authenticationActivity"
+        android:name="com.hus.geofence.authentication.AuthenticationActivity"
+        android:label="AuthenticationActivity" />
+</navigation>

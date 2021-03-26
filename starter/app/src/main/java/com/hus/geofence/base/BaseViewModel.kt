@@ -3,6 +3,7 @@ package com.hus.geofence.base
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.hus.geofence.utils.SingleLiveEvent
 
 /**
@@ -10,6 +11,7 @@ import com.hus.geofence.utils.SingleLiveEvent
  */
 abstract class BaseViewModel(app: Application) : AndroidViewModel(app) {
 
+    abstract val app: Application
     val navigationCommand: SingleLiveEvent<NavigationCommand> = SingleLiveEvent()
     val showErrorMessage: SingleLiveEvent<String> = SingleLiveEvent()
     val showSnackBar: SingleLiveEvent<String> = SingleLiveEvent()

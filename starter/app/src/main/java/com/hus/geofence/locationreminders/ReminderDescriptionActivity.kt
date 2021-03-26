@@ -33,5 +33,16 @@ class ReminderDescriptionActivity : AppCompatActivity() {
             R.layout.activity_reminder_description
         )
 //        TODO: Add the implementation of the reminder details
+
+        if (intent.hasExtra(EXTRA_ReminderDataItem)) {
+            binding.reminderDataItem = intent.getParcelableExtra<ReminderDataItem>(EXTRA_ReminderDataItem)
+        }
+
+        binding.goingBackToReminderListButton.setOnClickListener {
+            val intent = Intent(this, RemindersActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            finish()
+            startActivity(intent)
+        }
     }
 }
