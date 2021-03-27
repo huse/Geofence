@@ -30,7 +30,7 @@ class SelectLocationFragment : SuperBaseSaveReminder<FragmentSelectLocationBindi
 
     private val selectLocationFragmentArgs: SelectLocationFragmentArgs by navArgs()
     private val locationSydney : LatLng = LatLng(-34.0, 151.0)
-    private val normalView = 20f
+    private val normalView = 12f
     private var marker: Marker? = null
     //private lateinit var map: GoogleMap
     private lateinit var remindersDao: RemindersDao
@@ -48,10 +48,9 @@ class SelectLocationFragment : SuperBaseSaveReminder<FragmentSelectLocationBindi
     override fun onMapReady(googleMap: GoogleMap) {
         // resource : https://developers.google.com/maps/documentation/android-sdk/start#None-kotlin
         mMap = googleMap
-        Log.d("SelectLocationFragment", "hhhh  onMapReady  called.  map:  $mMap")
+        Log.d(TAG, "hhhh  onMapReady  called.  map:  $mMap")
 
         if (selectLocationFragmentArgs.reminder != null){
-            initSaveLocationClickListeners()
             addMarkerer(selectLocationFragmentArgs.reminder!!, true)
         } else {
             remindersViewModel.loadReminders()
@@ -60,17 +59,70 @@ class SelectLocationFragment : SuperBaseSaveReminder<FragmentSelectLocationBindi
                     addMarkerer(i, false)
                 }
             })
-            initSaveLocationClickListeners()
 
         }
 
-        updateLocationUI()
+       // updateLocationUI()
         // Add a marker in Sydney and move the camera
         val sydney = LatLng(-34.0, 151.0)
         mMap.addMarker(MarkerOptions()
                 .position(sydney)
                 .title("Marker in Sydney"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
+
+        viewBinding.btnSave.visibility = View.VISIBLE
+        viewBinding.btnSave.setOnClickListener {
+            Log.d(TAG, "hhhh  save button   clicked.  " + mMap )
+            if (marker == null) {
+                marker?.remove()
+/*                val sydney = LatLng(-34.0, 151.0)
+                //val snippet = "${it.latitude}, ${it.longitude}"
+                Log.d(TAG, "initSaveLocationClickListeners: $sydney")
+                saveReminderViewModel.updateSelectedLocation( sydney,"-34.0, 151.0")*/
+                saveReminderViewModel.showErrorMessage.value = ("Select a location on Map")
+
+                // saveReminderViewModel.navigationCommand.postValue(NavigationCommand.Back)
+            } else {
+                saveReminderViewModel.navigationCommand.postValue(NavigationCommand.Back)
+            }
+        }
+//resource :  https://developers.google.com/maps/documentation/android-sdk/poi
+
+        mMap.setOnPoiClickListener {
+            Log.d(TAG, "hhhh  setOnPoiClickListener  clicked.  " )
+
+            marker?.remove()
+
+            val snippet = it.name
+            Log.d(TAG, "onMapReady: $snippet")
+            saveReminderViewModel.positionUpdate(it.latLng, snippet, it)
+
+            marker = mMap.addMarker(
+                MarkerOptions().position(it.latLng)
+                    .title("Selected point")
+                    .snippet(snippet)
+            )
+
+        }
+        val mapClickListener =
+            GoogleMap.OnMapClickListener { Log.d("Map_Tag", "CLICK") }
+
+
+        mMap.setOnMapClickListener() {
+            Log.d(TAG, "hhhh  setOnMapClickListener  clicked.  " )
+            marker?.remove()
+            val snippet = "${it.latitude}, ${it.longitude}"
+            Log.d(TAG, "onMapReady: $snippet")
+            saveReminderViewModel.positionUpdate(it, snippet)
+
+            marker = mMap.addMarker(
+                MarkerOptions().position(it)
+                    .title("Selected point")
+                    .snippet(snippet)
+            )
+        }
+        Log.d(TAG, "hhhh  onMapReady  End.  " )
     }
 
 
@@ -84,7 +136,7 @@ class SelectLocationFragment : SuperBaseSaveReminder<FragmentSelectLocationBindi
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        Log.d("SelectLocationFragment", "hhhh  onCreateView  called.  " )
+        Log.d(TAG, "hhhh  onCreateView  called.  " )
 
      /*   binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_select_location, container, false)
@@ -115,19 +167,19 @@ class SelectLocationFragment : SuperBaseSaveReminder<FragmentSelectLocationBindi
          * onRequestPermissionsResult.
          */
 
-        Log.d("SelectLocationFragment", "hhhh  getLocationPermission  called.  " )
+        Log.d(TAG, "hhhh  getLocationPermission  called.  " )
 
         if (ContextCompat.checkSelfPermission(myContext.applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
-            Log.d("SelectLocationFragment", "hhhh  getLocationPermission  called.  true " )
+            Log.d(TAG, "hhhh  getLocationPermission  called.  true " )
 
             doesHavePermission = true
             updateLocationUI()
             onLocationSelected()
         } else {
 
-            Log.d("SelectLocationFragment", "hhhh  getLocationPermission  called.  false " )
+            Log.d(TAG, "hhhh  getLocationPermission  called.  false " )
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
         }
@@ -143,7 +195,7 @@ class SelectLocationFragment : SuperBaseSaveReminder<FragmentSelectLocationBindi
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray) {
-        Log.d("SelectLocationFragment", "hhhh  onRequestPermissionsResult  called.  " )
+        Log.d(TAG, "hhhh  onRequestPermissionsResult  called.  " )
 
         doesHavePermission = false
         when (requestCode) {
@@ -158,20 +210,20 @@ class SelectLocationFragment : SuperBaseSaveReminder<FragmentSelectLocationBindi
         updateLocationUI()
     }
     private fun updateLocationUI() {
-        Log.d("SelectLocationFragment", "hhhh  updateLocationUI  called." )
+        Log.d(TAG, "hhhh  updateLocationUI  called." )
 
         try {
             if (doesHavePermission) {
-                Log.d("SelectLocationFragment", "hhhh  updateLocationUI 1 called.  true " )
+                Log.d(TAG, "hhhh  updateLocationUI 1 called.  true " )
 
                 mMap.isMyLocationEnabled = true
-                Log.d("SelectLocationFragment", "hhhh  updateLocationUI 2 called.  true " )
+                Log.d(TAG, "hhhh  updateLocationUI 2 called.  true " )
 
                 mMap.uiSettings?.isMyLocationButtonEnabled = true
-                Log.d("SelectLocationFragment", "hhhh  updateLocationUI 3 called.  true " )
+                Log.d(TAG, "hhhh  updateLocationUI 3 called.  true " )
 
             } else {
-                Log.d("SelectLocationFragment", "hhhh  updateLocationUI  called.  false " )
+                Log.d(TAG, "hhhh  updateLocationUI  called.  false " )
 
                 mMap.isMyLocationEnabled = false
                 mMap.uiSettings?.isMyLocationButtonEnabled = false
@@ -187,7 +239,7 @@ class SelectLocationFragment : SuperBaseSaveReminder<FragmentSelectLocationBindi
         //         send back the selected location details to the view model
         //         and navigate back to the previous fragment to save the reminder and add the geofence
 
-        Log.d("SelectLocationFragment", "hhhh  onLocationSelected  called." )
+        Log.d(TAG, "hhhh  onLocationSelected  called." )
 
 
         try {
@@ -197,11 +249,11 @@ class SelectLocationFragment : SuperBaseSaveReminder<FragmentSelectLocationBindi
                     if (task.isSuccessful) {
 
 
-                        Log.d("SelectLocationFragment", "hhhh  onLocationSelected  called. 1 true " )
+                        Log.d(TAG, "hhhh  onLocationSelected  called. 1 true " )
                         // Set the map's camera position to the current location of the device.
                         previuosLocation = task.result
                         if (previuosLocation != null && selectLocationFragmentArgs.reminder == null) {
-                            Log.d("SelectLocationFragment", "hhhh  onLocationSelected  called. 2 true " )
+                            Log.d(TAG, "hhhh  onLocationSelected  called. 2 true " )
 
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                 LatLng(previuosLocation?.latitude ?: locationSydney.latitude,
@@ -227,65 +279,12 @@ class SelectLocationFragment : SuperBaseSaveReminder<FragmentSelectLocationBindi
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        Log.d("SelectLocationFragment", "hhhh  onCreateOptionsMenu  called.  " )
+        Log.d(TAG, "hhhh  onCreateOptionsMenu  called.  " )
 
         inflater.inflate(R.menu.map_options, menu)
     }
 
 
-    private fun initSaveLocationClickListeners() {
-        Log.d("SelectLocationFragment", "hhhh  initSaveLocationClickListeners  called.  " )
-        viewBinding.btnSave.visibility = View.VISIBLE
-        viewBinding.btnSave.setOnClickListener {
-            Log.d("SelectLocationFragment", "hhhh  save button   clicked.  " )
-            if (marker == null) {
-                marker?.remove()
-/*                val sydney = LatLng(-34.0, 151.0)
-                //val snippet = "${it.latitude}, ${it.longitude}"
-                Log.d(TAG, "initSaveLocationClickListeners: $sydney")
-                saveReminderViewModel.updateSelectedLocation( sydney,"sydney")*/
-                saveReminderViewModel.showErrorMessage.value = ("Select a location on Map")
-
-               // saveReminderViewModel.navigationCommand.postValue(NavigationCommand.Back)
-            } else {
-                saveReminderViewModel.navigationCommand.postValue(NavigationCommand.Back)
-            }
-        }
-//resource :  https://developers.google.com/maps/documentation/android-sdk/poi
-
-        mMap.setOnPoiClickListener {
-            Log.d("SelectLocationFragment", "hhhh  setOnPoiClickListener  clicked.  " )
-
-            marker?.remove()
-
-            val snippet = it.name
-            Log.d(TAG, "initSaveLocationClickListeners: $snippet")
-            saveReminderViewModel.positionUpdate(it.latLng, snippet, it)
-
-            marker = mMap.addMarker(
-                MarkerOptions().position(it.latLng)
-                    .title("Selected point")
-                    .snippet(snippet)
-            )
-
-        }
-
-
-
-        mMap.setOnMapClickListener {
-            Log.d("SelectLocationFragment", "hhhh  setOnPoiClickListener  clicked.  " )
-            marker?.remove()
-            val snippet = "${it.latitude}, ${it.longitude}"
-            Log.d(TAG, "initSaveLocationClickListeners: $snippet")
-            saveReminderViewModel.positionUpdate(it, snippet)
-
-            marker = mMap.addMarker(
-                MarkerOptions().position(it)
-                    .title("Selected point")
-                    .snippet(snippet)
-            )
-        }
-    }
 
     private fun addMarkerer(data: ReminderDataItem, single: Boolean) {
         if (data.latitude != null && data.longitude != null){
