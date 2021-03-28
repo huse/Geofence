@@ -33,7 +33,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDFWraTR7_Zopb02Ex6A4LRkMpMRUbuLlw" />
+            android:value="Put ggogle api map key here" />
 
         <activity android:name="com.hus.geofence.locationreminders.RemindersActivity">
         </activity>

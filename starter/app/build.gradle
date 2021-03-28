@@ -19,7 +19,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
-        buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"" + "AIzaSyDFWraTR7_Zopb02Ex6A4LRkMpMRUbuLlw" + "\""
+        buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"" + "Put ggogle api map key here" + "\""
 
     }
     buildTypes {
